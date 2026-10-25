@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router'
+import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router'
 
 import { Footer } from './components/Footer'
 import { Nav } from './components/Nav'
@@ -19,7 +19,7 @@ function ScrollManager() {
         return
       }
     }
-    window.scrollTo({ top: 0 })
+    if (pathname !== '/') window.scrollTo({ top: 0 })
   }, [pathname, hash])
   return null
 }
@@ -48,12 +48,12 @@ function Pages() {
 
 export function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Preloader />
       <ScrollManager />
       <Nav />
       <Pages />
       <Footer />
-    </BrowserRouter>
+    </HashRouter>
   )
 }

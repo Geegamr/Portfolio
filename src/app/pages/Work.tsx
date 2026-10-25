@@ -35,18 +35,18 @@ export function Work() {
         className="project-art mt-12 overflow-hidden rounded-[32px]"
         style={{ background: project.tint }}
       >
-        <Parallax src={project.cover} alt={project.title} className="aspect-[16/10] sm:aspect-[16/9]" strength={5} />
+        <Parallax src={`${import.meta.env.BASE_URL}${project.cover.replace(/^\//, '')}`} alt={project.title} className="aspect-[16/10] sm:aspect-[16/9]" strength={5} />
       </motion.div>
 
       <div className="mt-16 grid gap-12 lg:grid-cols-[320px_1fr] lg:gap-24">
         <Reveal>
           <dl className="grid grid-cols-2 gap-x-6 gap-y-8 text-[14px] lg:grid-cols-1">
-            {[
-              ['Client', project.client],
-              ['Year', project.year],
-              ['Role', project.role.join(', ')],
-              ['Delivered', project.deliverables.join(', ')],
-            ].map(([label, value]) => (
+          {[
+            ['Client', project.client],
+            ['Year', project.year],
+            ['Role', project.role.join(', ')],
+            ['Delivered', project.deliverables.join(', ')],
+          ].map(([label, value]) => (
               <div key={label} className="border-t border-line pt-3">
                 <dt className="text-muted">{label}</dt>
                 <dd className="mt-1 text-fg">{value}</dd>
@@ -74,7 +74,7 @@ export function Work() {
       <div className="mt-16 flex flex-col gap-8">
         {[{ src: project.cover, label: 'App overview' }, ...(project.screenshots ?? [])].map((screenshot) => (
           <figure key={screenshot.src} className="overflow-hidden rounded-image border border-line bg-surface p-3 sm:p-5">
-            <img src={screenshot.src} alt={`${project.title} — ${screenshot.label}`} className="block h-auto w-full rounded-[18px]" loading="lazy" />
+            <img src={`${import.meta.env.BASE_URL}${screenshot.src.replace(/^\//, '')}`} alt={`${project.title} — ${screenshot.label}`} className="block h-auto w-full rounded-[18px]" loading="lazy" />
             {project.screenshots && <figcaption className="px-2 pb-1 pt-4 text-[14px] text-muted">{screenshot.label}</figcaption>}
           </figure>
         ))}
@@ -93,7 +93,7 @@ export function Work() {
           </span>
         </div>
         <span className="squircle-hit image-frame hidden aspect-[4/3] w-full overflow-hidden border border-line-strong sm:block" style={{ background: next.tint }}>
-          <img src={next.cover} alt="" className="size-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+          <img src={`${import.meta.env.BASE_URL}${next.cover.replace(/^\//, '')}`} alt="" className="size-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
         </span>
       </Link>
     </article>

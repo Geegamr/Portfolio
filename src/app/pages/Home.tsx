@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowUpRight, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
@@ -11,6 +11,7 @@ import { cx } from '../lib/cx'
 const ease = [0.22, 1, 0.36, 1] as const
 
 export function Home() {
+  const prefersReducedMotion = useReducedMotion()
   const years = projects.map((p) => Number(p.year))
   const first = Math.min(...years)
   const last = Math.max(...years)
@@ -23,14 +24,22 @@ export function Home() {
           <h1 className="font-display text-[clamp(64px,13.5vw,210px)] text-fg">
             {site.name.split(' ').map((word, i) => (
               <span key={word} className="block overflow-hidden pb-[0.06em] -mb-[0.06em]">
-                <motion.span className="block" initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ duration: 1.1, delay: 0.25 + i * 0.12, ease }}>
+                <motion.span className="block" initial={prefersReducedMotion ? false : { y: '110%' }} animate={{ y: 0 }} transition={{ duration: prefersReducedMotion ? 0 : 1.1, delay: prefersReducedMotion ? 0 : 0.25 + i * 0.12, ease }}>
                   {word}
                 </motion.span>
               </span>
             ))}
           </h1>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.7, ease }} className="mt-10 border-t border-fg/15 pt-6">
-            <p className="max-w-md text-pretty text-[17px] leading-relaxed text-muted sm:text-[19px]">{site.intro}</p>
+          <motion.div initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: prefersReducedMotion ? 0 : 0.9, delay: prefersReducedMotion ? 0 : 0.7, ease }} className="mt-8 max-w-2xl border-t border-fg/15 pt-6 sm:mt-10">
+            <p className="max-w-xl text-pretty text-[16px] leading-relaxed text-muted sm:text-[19px]">I build apps, desktop software, useful tools, and web projects—made to solve a real problem and feel good to use.</p>
+            <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-4">
+              <a href={`mailto:${site.email}?subject=${encodeURIComponent('Let’s talk about a project')}`} className="squircle-hit inline-flex min-h-12 items-center gap-2 rounded-[16px] bg-accent px-6 py-3 text-[15px] font-semibold text-navy-deep transition-colors hover:bg-accent-soft">
+                Tell me what you’re building <ArrowUpRight aria-hidden="true" className="size-4" />
+              </a>
+              <Link to="/#work" className="link-draw inline-flex min-h-11 items-center gap-1.5 text-[14px] font-medium text-fg">
+                See selected work <ArrowUpRight aria-hidden="true" className="size-4" />
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -51,7 +60,7 @@ export function Home() {
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
           <Reveal>
-            <Parallax src="/images/portrait.jpg" alt={`${site.name} sitting outside at night`} className="portrait-photo aspect-[3/4] max-w-[460px] rounded-image" strength={6} />
+            <Parallax src={`${import.meta.env.BASE_URL}images/portrait.jpg`} alt={`${site.name} sitting outside at night`} className="portrait-photo aspect-[3/4] max-w-[460px] rounded-image" strength={6} />
           </Reveal>
           <div className="flex flex-col justify-center">
             <Lines
@@ -124,8 +133,11 @@ export function Home() {
         <div className="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-20">
           <div>
             <Lines as="h2" className="font-display text-[40px] sm:text-[56px]" lines={['What I do']} />
-            <Reveal delay={0.1} className="mt-4 max-w-xs text-[15px] text-muted">
-              Four things these projects are built from. Most of them use two.
+            <Reveal delay={0.1} className="mt-4 max-w-xs text-[15px] leading-relaxed text-muted">
+              Apps, desktop software, web projects, and practical tools—scoped to the problem you actually need solved.
+            </Reveal>
+            <Reveal delay={0.2} className="mt-8 max-w-sm border-t border-line pt-5 text-[15px] leading-relaxed text-muted">
+              {site.projectProcess}
             </Reveal>
           </div>
           <Services />
@@ -135,15 +147,14 @@ export function Home() {
   )
 }
 
-// Cool-toned light fields drift across the navy hero and fade into the page.
+// A quiet cool-toned field gives the navy hero depth without competing with its type.
 function HeroField() {
   return (
-    <div aria-hidden className="hero-mask pointer-events-none absolute inset-0">
+    <div aria-hidden="true" className="hero-mask pointer-events-none absolute inset-0">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.6, ease }} className="absolute inset-0">
-        <div className="round hero-glow-blue absolute -top-[25%] right-[-12%] h-[95%] w-[70%] animate-drift-a rounded-full blur-3xl" />
-        <div className="round hero-glow-violet absolute -top-[10%] left-[-12%] h-[80%] w-[62%] animate-drift-b rounded-full blur-3xl" />
-        <div className="round hero-glow-cyan absolute top-[22%] left-[32%] h-[70%] w-[56%] animate-drift-c rounded-full blur-3xl" />
-        <div className="round hero-glow-indigo absolute top-[45%] right-[12%] h-[50%] w-[40%] animate-drift-b rounded-full blur-3xl" />
+        <div className="round hero-glow-blue absolute -top-[18%] right-[-8%] h-[78%] w-[62%] animate-drift-a rounded-full blur-[56px]" />
+        <div className="round hero-glow-violet absolute -top-[8%] left-[-8%] h-[62%] w-[48%] animate-drift-b rounded-full blur-[56px]" />
+        <div className="round hero-glow-cyan absolute top-[24%] left-[34%] h-[58%] w-[48%] animate-drift-c rounded-full blur-[56px]" />
       </motion.div>
       <div className="grain absolute inset-0" />
     </div>

@@ -91,8 +91,11 @@
     background: var(--color-bg);
     color-scheme: dark;
     overscroll-behavior-y: none;
+    scroll-behavior: smooth;
   }
   body {
+    width: 100%;
+    min-width: 320px;
     background: var(--color-bg);
     color: var(--color-fg);
     font-family: var(--font-sans);
@@ -101,6 +104,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  #root {
+    width: 100%;
+    min-width: 0;
     overflow-x: clip;
   }
   button,
@@ -131,11 +139,16 @@
     .portrait-photo img { object-position: 46% 26%; }
   }
   @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
     *,
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }

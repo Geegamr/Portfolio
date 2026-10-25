@@ -83,12 +83,17 @@ export function Footer() {
                 <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-muted">Your message is in my inbox. I’ll get back to you within two days.</p>
               </div>
             ) : (
-              <form onSubmit={submit} className="flex flex-col gap-3">
+              <form onSubmit={submit} aria-label="Tell me about your project" className="flex flex-col gap-3">
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <input required placeholder="Your name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                  <input required type="email" placeholder="Email" className={field} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  <label className="sr-only" htmlFor="contact-name">Your name</label>
+                  <input id="contact-name" name="name" autoComplete="name" required placeholder="Your name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                  <label className="sr-only" htmlFor="contact-email">Email</label>
+                  <input id="contact-email" name="email" autoComplete="email" required type="email" placeholder="Email" className={field} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
                 </div>
+                <label className="sr-only" htmlFor="contact-message">A few words about the project</label>
                 <textarea
+                  id="contact-message"
+                  name="message"
                   required
                   placeholder="A few words about the project"
                   className={`${field} h-auto min-h-[140px] resize-none py-4`}
@@ -96,7 +101,7 @@ export function Footer() {
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                 />
                 <button type="submit" disabled={state === 'sending'} className="squircle-hit h-14 border border-accent text-[15px] font-medium transition-colors hover:bg-accent hover:text-navy-deep disabled:opacity-50">
-                  Send
+                  {state === 'sending' ? 'Sending…' : 'Send project enquiry'}
                 </button>
                 {state === 'error' && (
                   <div className="text-[13px] text-accent">

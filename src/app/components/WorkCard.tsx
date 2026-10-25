@@ -34,7 +34,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
       >
         <div className="project-art relative aspect-[4/3] overflow-hidden rounded-image" style={{ background: project.tint }}>
           <div className="absolute inset-0 transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]">
-            <img src={project.cover} alt={`${project.title} app interface`} className="absolute inset-0 size-full object-cover" loading="lazy" />
+            <img src={`${import.meta.env.BASE_URL}${project.cover.replace(/^\//, '')}`} alt={`${project.title} app interface`} className="absolute inset-0 size-full object-cover" loading="lazy" />
           </div>
           <motion.span
             aria-hidden
@@ -54,6 +54,18 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
             <span className="ml-3 tabular-nums text-faint">{project.year}</span>
           </p>
         </div>
+        <p className="mt-3 min-h-[5.5rem] text-pretty text-[14px] leading-relaxed text-muted sm:text-[15px]">{project.summary}</p>
+        <ul aria-label={`${project.title} features`} className="mt-3 flex flex-wrap gap-2">
+          {project.deliverables.slice(0, 3).map((deliverable) => (
+            <li key={deliverable} className="rounded-full border border-line px-2.5 py-1 text-[11px] leading-snug text-faint sm:text-[12px]">{deliverable}</li>
+          ))}
+        </ul>
+        <span className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-medium text-accent">
+          Read the case study <span className="sr-only">for {project.title}</span>
+          <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+            <path d="M4 12 12 4M5 4h7v7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
       </Link>
     </motion.div>
   )
