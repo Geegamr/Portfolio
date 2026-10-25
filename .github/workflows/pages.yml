@@ -29,30 +29,15 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies
-        run: npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund libsodium-wrappers @types/node && bun install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Typecheck
         run: bun run typecheck
-      - name: Generate temporary public/private key pair for the build
-        run: |
-          node --input-type=module <<'NODE'
-          import sodium from 'libsodium-wrappers'
-          import { appendFileSync } from 'node:fs'
-          await sodium.ready
-          const pair = sodium.crypto_box_keypair()
-          const b64 = sodium.base64_variants.ORIGINAL
-          appendFileSync(process.env.GITHUB_ENV, 'GITHUB_PAGES_PRIVATE_KEY=' + sodium.to_base64(pair.privateKey, b64) + String.fromCharCode(10))
-          console.log(`public-key=${sodium.to_base64(pair.publicKey, b64)}`)
-          NODE
-      - name: Prepare Web3Forms Actions secret
-        run: node .github/scripts/prepare-web3forms-secret.mjs
-        env:
-          WEB3FORMS_ACTIONS_SECRET: ${{ secrets.VITE_WEB3FORMS_ACCESS_KEY }}
-          GITHUB_TOKEN: ${{ github.token }}
       - name: Build site for GitHub Pages
         run: bun run build
         env:
           GITHUB_ACTIONS: true
+          VITE_WEB3FORMS_ACCESS_KEY: ${{ secrets.VITE_WEB3FORMS_ACCESS_KEY }}
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
