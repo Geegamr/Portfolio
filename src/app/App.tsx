@@ -13,11 +13,21 @@ function ScrollManager() {
   const { pathname, hash } = useLocation()
   useEffect(() => {
     if (hash) {
-      const target = document.querySelector(hash)
-      if (target) {
-        window.setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 50)
+      if (pathname === '/') {
+        const id = hash.slice(1)
+        const findTarget = () => {
+          const target = document.getElementById(id)
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' })
+            return true
+          }
+          return false
+        }
+        if (!findTarget()) window.setTimeout(findTarget, 450)
         return
       }
+      window.scrollTo({ top: 0 })
+      return
     }
     if (pathname !== '/') window.scrollTo({ top: 0 })
   }, [pathname, hash])

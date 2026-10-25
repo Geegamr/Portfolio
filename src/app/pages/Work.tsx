@@ -29,7 +29,7 @@ export function Work() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.98 }}
+        initial={false}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 1.1, delay: 0.2, ease }}
         className="project-art mt-12 overflow-hidden rounded-[32px]"
