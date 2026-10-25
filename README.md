@@ -1,42 +1,41 @@
-# Portfolio
+# Enrique Ramirez — Developer Portfolio
 
-A personal site for a designer or developer: a counted preloader, an
-oversized name, a services marquee, a selected-work grid with parallax and a
-cursor-following label, an about teaser, an expanding services list and a
-contact section with a working form. Each project has a
-case-study page with a next-project link, and there is a full about page.
+A personal portfolio for my desktop apps, web projects, and practical tools. It includes selected project case studies, an about page, a services overview, and a contact form. Built with React, TypeScript, Vite, Tailwind CSS, and Motion.
 
-## Run it
+**Live site:** https://geegamr.github.io/Portfolio/
+
+## Run locally
+
+Requirements: [Bun](https://bun.sh/) and Git.
 
 ```sh
 bun install
-bun run dev        # http://localhost:5173
-bun run build      # dist/client (assets) + dist/portfolio/index.js (Worker)
+bun run dev
 ```
 
-## Make it yours
+Vite prints the local development URL (usually `http://localhost:5173`). To check types and create a production build:
 
-- `src/data/site.ts` is the whole site: your name, role, location, socials,
-  projects and services. Images live in `public/images`; each project has one
-  cover and the case-study page crops it for detail shots until you add more.
-- `src/app/pages/*` are the three pages; `src/app/components/motion.tsx` holds
-  the reusable animation pieces (masked line reveals, parallax, magnetic
-  buttons, the rotating badge).
-- `src/styles.css` holds the tokens: a paper canvas, ink text, one electric
-  accent, Bricolage Grotesque for display type. Everything rounded is a
-  squircle via `corner-shape`; true circles use `.round`.
-- The contact form posts directly from the browser to Web3Forms, so it works
-  on static hosts such as GitHub Pages without this Worker. Copy `.env.example`
-  to `.env.local` and set `VITE_WEB3FORMS_ACCESS_KEY` to the access key from
-  Web3Forms. This key is intended for frontend use; submissions are delivered
-  to the email address verified in your Web3Forms account. If the online submit
-  fails (including after the monthly free quota is exhausted), the form opens a
-  pre-filled `mailto:` draft instead. Visitors need an email app configured to
-  send that draft. Never put private API credentials in a `VITE_` variable.
+```sh
+bun run typecheck
+bun run build
+```
 
-Motion respects `prefers-reduced-motion`, and the preloader runs once per tab.
+The static site output is written to `dist/`.
 
-## Deploy with Freebuff Sites
+## Update the portfolio
 
-`deploy.json` points at the build output. After `bun run build`, deploy with
-the `sites_deploy` tool from this directory.
+- Edit `src/data/site.ts` to update the site details, services, social links, and selected projects. Each project has its own case-study route.
+- Put project covers, screenshots, and the portrait in `public/images/`; reference them from the site data using paths such as `/images/project.png`.
+- Edit `src/app/pages/` for the Home, About, and Work pages. Shared components are in `src/app/components/`, and global styles are in `src/styles.css`.
+
+## Contact form
+
+The contact form submits from the visitor’s browser to Web3Forms, which delivers messages to the email address verified in that Web3Forms account. For local use, copy `.env.example` to `.env.local` and set `VITE_WEB3FORMS_ACCESS_KEY` to your Web3Forms access key. The key is intended for frontend use and will be present in the built site; do not put private API credentials in `VITE_` variables.
+
+For GitHub Pages, the workflow expects a repository Actions secret named `VITE_WEB3FORMS_ACCESS_KEY`. It is already configured for this repository. If the online form submission fails, the page offers a pre-filled email draft as a fallback; visitors need an email application configured to send it.
+
+## GitHub Pages deployment
+
+This repository is configured to publish automatically from `main` using [`.github/workflows/pages.yml`](.github/workflows/pages.yml). The workflow installs dependencies with the committed Bun lockfile, typechecks and builds the site with the `/Portfolio/` base path, then deploys `dist/` to GitHub Pages. A push to `main` or a manual workflow run starts a deployment.
+
+The current Pages site is https://geegamr.github.io/Portfolio/.
