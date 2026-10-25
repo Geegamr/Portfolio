@@ -1,0 +1,190 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/bricolage-grotesque';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+
+  --color-bg: hsl(222 48% 8%);
+  --color-surface: hsl(220 38% 12%);
+  --color-surface-2: hsl(218 34% 16%);
+  --color-line: hsl(218 28% 23%);
+  --color-line-strong: hsl(216 25% 32%);
+  --color-fg: hsl(214 32% 94%);
+  --color-muted: hsl(216 17% 69%);
+  --color-faint: hsl(216 15% 62%);
+  --color-accent: hsl(193 91% 62%);
+  --color-accent-soft: hsl(202 72% 72%);
+  --color-navy-deep: hsl(224 54% 6%);
+  --color-navy-raised: hsl(220 41% 17%);
+  --color-project-blue: hsl(210 72% 68%);
+
+  --radius-control: 14px;
+  --radius-card: 24px;
+  --radius-image: 28px;
+  --radius-interactive: 0.65em;
+
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-drift-a: drift-a 22s ease-in-out infinite alternate;
+  --animate-drift-b: drift-b 26s ease-in-out infinite alternate;
+  --animate-drift-c: drift-c 30s ease-in-out infinite alternate;
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes drift-a {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(-10%, 12%, 0) scale(1.12); }
+  }
+  @keyframes drift-b {
+    from { transform: translate3d(0, 0, 0) scale(1.05); }
+    to { transform: translate3d(14%, -8%, 0) scale(0.95); }
+  }
+  @keyframes drift-c {
+    from { transform: translate3d(0, 6%, 0) scale(0.95); }
+    to { transform: translate3d(-8%, -10%, 0) scale(1.15); }
+  }
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    corner-shape: squircle;
+    border-color: var(--color-line);
+  }
+  /* corner-shape is still experimental; keep rounded controls as a fallback,
+     while using squircle corners in browsers that implement the property. */
+  :where(a, button, input, textarea, select, summary, [role='button']) {
+    border-radius: var(--radius-interactive);
+  }
+  :where(a, button, input, textarea, select, summary, [role='button']).squircle-hit {
+    border-radius: 16px;
+  }
+  @supports (corner-shape: squircle) {
+    :where(a, button, input, textarea, select, summary, [role='button']) {
+      corner-shape: squircle;
+    }
+    :where(a, button, input, textarea, select, summary, [role='button']).squircle-hit {
+      corner-shape: squircle;
+      border-radius: 18px;
+    }
+  }
+  .round,
+  .round::before,
+  .round::after {
+    corner-shape: round;
+  }
+  .hero-glow-blue { background: radial-gradient(closest-side, hsl(198 95% 55% / 0.42), transparent); }
+  .hero-glow-violet { background: radial-gradient(closest-side, hsl(242 76% 67% / 0.3), transparent); }
+  .hero-glow-cyan { background: radial-gradient(closest-side, hsl(177 83% 50% / 0.22), transparent); }
+  .hero-glow-indigo { background: radial-gradient(closest-side, hsl(222 92% 66% / 0.24), transparent); }
+  .hero-mask { mask-image: linear-gradient(to bottom, hsl(0 0% 0%) 60%, transparent 96%); }
+  .project-art {
+    border: 1px solid hsl(216 35% 48% / 0.24);
+    background-image: linear-gradient(135deg, hsl(214 70% 55% / 0.10), transparent 48%, hsl(193 91% 62% / 0.08));
+    box-shadow: 0 22px 72px hsl(224 70% 3% / 0.24), inset 0 1px hsl(210 70% 90% / 0.06);
+  }
+  .project-title { color: var(--color-project-blue); }
+  html {
+    background: var(--color-bg);
+    color-scheme: dark;
+    overscroll-behavior-y: none;
+  }
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    letter-spacing: -0.008em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  button,
+  input,
+  textarea {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-fg);
+    color: var(--color-bg);
+  }
+  img {
+    user-select: none;
+  }
+  .portrait-photo img {
+    object-position: 46% 32%;
+  }
+  .portrait-photo.image-frame {
+    box-shadow: 0 26px 72px hsl(224 70% 3% / 0.38);
+  }
+  @media (min-width: 768px) {
+    .portrait-photo img { object-position: 46% 26%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Display type: Bricolage's optical size and width axes give it character at
+   scale; keep the tracking tight and the leading tighter. */
+@utility font-display {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+
+@utility font-display-wide {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 96, 'wdth' 112;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+@utility text-pretty {
+  text-wrap: pretty;
+}
+
+/* Underline that draws in from the left on hover. */
+@utility link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  &:hover {
+    background-size: 100% 1px;
+  }
+}
+
+@utility image-frame {
+  background: var(--color-surface-2);
+  overflow: hidden;
+}
+
+/* Film grain over the hero's colour field. */
+@utility grain {
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
