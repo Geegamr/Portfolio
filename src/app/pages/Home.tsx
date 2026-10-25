@@ -60,7 +60,7 @@ export function Home() {
       <section className="mx-auto max-w-[1400px] px-5 pt-32 sm:px-8 sm:pt-44">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
           <Reveal>
-            <Parallax src={`${import.meta.env.BASE_URL}images/portrait.jpg`} alt={`${site.name} sitting outside at night`} className="portrait-photo aspect-[3/4] max-w-[460px] rounded-image" strength={6} />
+            <Parallax src="/images/portrait.jpg" alt={`${site.name} sitting outside at night`} className="portrait-photo aspect-[3/4] max-w-[460px] rounded-image" strength={6} />
           </Reveal>
           <div className="flex flex-col justify-center">
             <Lines
