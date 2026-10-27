@@ -35,7 +35,7 @@ export function Work() {
         className="project-art mt-12 overflow-hidden rounded-[32px]"
         style={{ background: project.tint }}
       >
-        <Parallax src={`${import.meta.env.BASE_URL}${project.cover.replace(/^\//, '')}`} alt={project.title} className="aspect-[16/10] sm:aspect-[16/9]" strength={5} />
+        <Parallax src={project.cover} alt={project.title} className="aspect-[16/10] sm:aspect-[16/9]" strength={5} />
       </motion.div>
 
       <div className="mt-16 grid gap-12 lg:grid-cols-[320px_1fr] lg:gap-24">
