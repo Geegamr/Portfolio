@@ -1,18 +1,38 @@
-import { motion } from 'motion/react'
-import { ArrowLeft, ArrowUpRight } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
 
 import { bySlug, projects } from '../../data/site'
-import { Lines, Parallax, Reveal } from '../components/motion'
+import { Lines, Reveal } from '../components/motion'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
 export function Work() {
   const { slug } = useParams()
   const project = slug ? bySlug(slug) : undefined
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [slideDirection, setSlideDirection] = useState(1)
+
+  useEffect(() => {
+    setActiveSlide(0)
+    setSlideDirection(1)
+  }, [slug])
+
   if (!project) return <Navigate to="/" replace />
   const index = projects.findIndex((p) => p.slug === project.slug)
   const next = projects[(index + 1) % projects.length]
+  const gallery = [{ src: project.cover, label: 'App overview' }, ...(project.screenshots ?? [])]
+  const hasMultipleSlides = gallery.length > 1
+  const activeImage = gallery[activeSlide] ?? gallery[0]
+  const hasPreviousImage = activeSlide > 0
+  const hasNextImage = activeSlide < gallery.length - 1
+
+  function changeSlide(nextSlide: number) {
+    if (nextSlide < 0 || nextSlide >= gallery.length || nextSlide === activeSlide) return
+    setSlideDirection(nextSlide > activeSlide ? 1 : -1)
+    setActiveSlide(nextSlide)
+  }
 
   return (
     <article className="mx-auto max-w-[1400px] px-5 pt-28 sm:px-8 sm:pt-36">
@@ -32,10 +52,48 @@ export function Work() {
         initial={false}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 1.1, delay: 0.2, ease }}
-        className="project-art mt-12 overflow-hidden rounded-[32px]"
-        style={{ background: project.tint }}
+        role="region"
+        aria-label={`${project.title} image gallery`}
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowLeft') {
+            event.preventDefault()
+            changeSlide(activeSlide - 1)
+          } else if (event.key === 'ArrowRight') {
+            event.preventDefault()
+            changeSlide(activeSlide + 1)
+          }
+        }}
+        className="relative isolate mt-12 aspect-[16/10] overflow-hidden rounded-[32px] border border-zinc-800 bg-black outline-none focus-visible:ring-2 focus-visible:ring-accent sm:aspect-[16/9]"
       >
-        <Parallax src={project.cover} alt={project.title} className="aspect-[16/10] sm:aspect-[16/9]" strength={5} />
+        <div className="absolute inset-0 flex min-h-0 min-w-0 items-center justify-center overflow-hidden">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.img
+          key={activeImage.src}
+          initial={{ opacity: 0, x: slideDirection * 44, scale: 0.99 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: slideDirection * -44, scale: 0.99 }}
+          transition={{ duration: 0.3, ease }}
+          src={`${import.meta.env.BASE_URL}${activeImage.src.replace(/^\//, '')}`}
+          alt={`${project.title} — ${activeImage.label}`}
+          className="size-full object-fill"
+            />
+          </AnimatePresence>
+        </div>
+
+        {hasMultipleSlides && (
+          <div className="pointer-events-none absolute inset-x-4 bottom-4 z-20 flex items-center justify-between sm:inset-x-5 sm:bottom-5">
+            <div className="pointer-events-auto flex items-center gap-2">
+              <button type="button" aria-label="Previous image" disabled={!hasPreviousImage} onClick={() => changeSlide(activeSlide - 1)} className="flex size-11 items-center justify-center rounded-full border border-white/20 bg-black/75 text-white shadow-lg backdrop-blur transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-35">
+                <ArrowLeft aria-hidden="true" className="size-5" />
+              </button>
+              <button type="button" aria-label="Next image" disabled={!hasNextImage} onClick={() => changeSlide(activeSlide + 1)} className="flex size-11 items-center justify-center rounded-full border border-white/20 bg-black/75 text-white shadow-lg backdrop-blur transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-35">
+                <ArrowRight aria-hidden="true" className="size-5" />
+              </button>
+            </div>
+            <span className="rounded-full border border-white/20 bg-black/75 px-3.5 py-2 text-[13px] font-medium tabular-nums text-white shadow-lg backdrop-blur">{activeSlide + 1} / {gallery.length}</span>
+          </div>
+        )}
       </motion.div>
 
       <div className="mt-16 grid gap-12 lg:grid-cols-[320px_1fr] lg:gap-24">
@@ -71,14 +129,6 @@ export function Work() {
         </div>
       </div>
 
-      <div className="mt-16 flex flex-col gap-8">
-        {[{ src: project.cover, label: 'App overview' }, ...(project.screenshots ?? [])].map((screenshot) => (
-          <figure key={screenshot.src} className="overflow-hidden rounded-image border border-line bg-surface p-3 sm:p-5">
-            <img src={`${import.meta.env.BASE_URL}${screenshot.src.replace(/^\//, '')}`} alt={`${project.title} — ${screenshot.label}`} className="block h-auto w-full rounded-[18px]" loading="lazy" />
-            {project.screenshots && <figcaption className="px-2 pb-1 pt-4 text-[14px] text-muted">{screenshot.label}</figcaption>}
-          </figure>
-        ))}
-      </div>
 
       <Link
         to={`/work/${next.slug}`}
