@@ -64,6 +64,7 @@ export const projects: Project[] = [
     cover: '/images/craftdock-home.png',
     screenshots: [
       { src: '/images/craftdock-instance.png', label: 'Instance management and launch settings' },
+      { src: '/images/craftdock-accounts.png', label: 'Microsoft account sign-in and account switching' },
       { src: '/images/craftdock-browser.png', label: 'Modpack browser' },
       { src: '/images/craftdock-server.png', label: 'Minecraft server manager' },
       { src: '/images/craftdock-skins.png', label: 'Skin manager' },
